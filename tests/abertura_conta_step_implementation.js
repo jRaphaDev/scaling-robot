@@ -89,3 +89,13 @@ step("Sendo esse um CPF inválido", async function() {
 step("Então o botão para abertura de conta gratis será desabilitado", async function() {
     assert.ok(await button("abra sua conta grátis").isDisabled());
 });
+
+
+/*
+> checkBox({id: "opt_in"}).check() 
+> write("Raphael Freitas", into(textBox("nome completo")))
+> write("raphael.a.freitas-santos@gmail.com.br", into(textBox("email")))
+> write("(11) 99263-1777", into(textBox("celular")))
+> click("continuar")
+> text("estamos quase lá, agora é só baixar o app").exists()
+*/
