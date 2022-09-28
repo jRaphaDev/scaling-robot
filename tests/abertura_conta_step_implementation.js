@@ -6,28 +6,17 @@ const {
     write,
     closeBrowser,
     goto,
-    press,
     screenshot,
-    above,
     click,
-    checkBox,
-    listItem,
-    toLeftOf,
-    link,
     text,
     into,
-    waitFor,
     textBox,
-    evaluate,
+    waitFor,
     button,
-    currentURL,
-    near,
-    deleteCookies
-} = require('taiko');
+    deleteCookies} = require('taiko');
 const assert = require("assert");
 const headless = process.env.headless_chrome.toLowerCase() === 'true';
 var CPFTelaHome;
-
 
 beforeScenario(async () => {
     await openBrowser({
@@ -36,7 +25,8 @@ beforeScenario(async () => {
 });
 
 afterScenario(async () => {
-   await closeBrowser();
+    await deleteCookies();
+    await closeBrowser();
 });
 
 gauge.customScreenshotWriter = async function () {
@@ -49,13 +39,16 @@ gauge.customScreenshotWriter = async function () {
     return path.basename(screenshotFilePath);
 };
 
-step("Abrir Home de Abertura de Conta do ITI", async function() {
+step("Abrir aplicação para solicitação de abertura de conta do iti", async function() {
     await goto("conta.iti.itau");
+    
+    //waitFor(async () => !(await textBox("000.000.000-00").exists()))
+
 });
 
 step("Ao digitar um numero de CPF <cpf>", async function(cpf) {
     CPFTelaHome = cpf;
-    await write(CPFTelaHome, into(textBox("000.000.000-00")))
+    await write(CPFTelaHome, into(textBox("000.000.000-00"), {waitForStart: 1000, navigationTimeout: 90000}))
 });
 
 step("Sendo esse um CPF válido", async function() {
@@ -70,7 +63,7 @@ step("Ao clicar no botão para abertura de conta gratis", function() {
     click("abra sua conta grátis", { waitForEvents:['DOMContentLoaded']})
 });
 
-step("O cliente será redirecionado para o formulario com campos de dados pessoais", async function() {
+step("O cliente será redirecionado para o formulario com campos adicionais", async function() {
     
     //assert.equal(await currentURL(), "https://conta.iti.itau/abra-sua-conta/conta-gratis/")
 });
@@ -79,7 +72,12 @@ step("O campo CPF deverá conter o mesmo CPF da tela anterior", async function()
     assert.ok(await text(CPFTelaHome).exists());
 });
 
-step("O botão continuar, deverá estar desabilitado previamente", async function() {
+
+step("Se os campos obrigatórios estiverem vazios", async function() {
+    assert.ok(true);
+});
+
+step("O botão continuar, deverá estar desabilitado", async function() {
     assert.ok(await button("continuar").isDisabled());
 });
 
